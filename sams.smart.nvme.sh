@@ -13,7 +13,7 @@ Disks=$(lsblk --nodeps -oNAME,TRAN,MODEL | grep -E "nvme.*Samsung.*970"| awk '{p
 
 # Create items file
 for label in $Disks ; do
-	echo "$label Serial Number: " >> $IFile && lsblk --nodeps -oNAME,SERIAL | grep "$label" | awk '{print $2}' >> $IFile
+	echo -n "$label Serial Number: " >> $IFile && lsblk --nodeps -oNAME,SERIAL | grep "$label" | awk '{print $2}' >> $IFile
 	echo -n "$label Temperature: " >> $IFile && smartctl -A /dev/$label | grep Temperature: | awk '{print $2}' >> $IFile
 	AvSpare=$(smartctl -A /dev/$label  | grep "Spare:" | awk '{print $3}' | sed 's/%//')
 	AvSpareTr=$(smartctl -A /dev/$label | grep "Spare Threshold:" | awk '{print $4}' | sed 's/%//')
@@ -22,7 +22,7 @@ for label in $Disks ; do
 	else
 		Spare="0"
 	fi
-	echo -n "$label Available Spare: $Spare" >> $IFile
+	echo "$label Available Spare: $Spare" >> $IFile
 	echo -n "$label Used: " >> $IFile && smartctl -A /dev/$label  | grep "Used:" | awk '{print $3}' | sed 's/%//' >> $IFile
 	echo -n "$label Data Units Read: " >> $IFile && smartctl -A /dev/$label  | grep "Units Read:" | awk '{print $5}' | sed 's/\[//' >> $IFile
 	echo -n "$label Data Units Written: " >> $IFile && smartctl -A /dev/$label  | grep "Units Written:" | awk '{print $5}' | sed 's/\[//' >> $IFile
