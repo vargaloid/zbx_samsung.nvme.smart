@@ -24,8 +24,8 @@ for label in $Disks ; do
 	fi
 	echo "$label AvailableSpare: $Spare" >> $IFile
 	echo -n "$label Used: " >> $IFile && smartctl -A /dev/$label  | grep "Used:" | awk '{print $3}' | sed 's/%//' >> $IFile
-	echo -n "$label DataUnitsRead: " >> $IFile && smartctl -A /dev/$label  | grep "Units Read:" | awk '{print $5}' | sed 's/\[//' >> $IFile
-	echo -n "$label DataUnitsWritten: " >> $IFile && smartctl -A /dev/$label  | grep "Units Written:" | awk '{print $5}' | sed 's/\[//' >> $IFile
+	echo -n "$label DataUnitsRead: " >> $IFile && smartctl -A /dev/$label  | grep "Units Read:" | awk '{print $5}' | sed 's/\[//' | sed 's/,/./' >> $IFile
+	echo -n "$label DataUnitsWritten: " >> $IFile && smartctl -A /dev/$label  | grep "Units Written:" | awk '{print $5}' | sed 's/\[//' | sed 's/,/./' >> $IFile
 	echo -n "$label PowerOnHours: " >> $IFile && smartctl -A /dev/$label  | grep "On Hours:" | awk '{print $4}' >> $IFile
 done
 
