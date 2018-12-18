@@ -16,5 +16,6 @@ Files:
 * sams.smart.nvme.sh -- main script
 * userparameter_sams.nvme.smart.conf -- Key for zabbix-agent
 * zabbix_template_samsung.nvme.smart.xml -- Zabbix Template
+* zabbix_template_samsung.nvme.smart.yml -- Ansible playbook
 * /tmp/zbx.sams.nvme.smart.discovery.txt -- JSON for Zabbix Discovery
 * /tmp/zbx.sams.nvme.smart.items.txt -- Items for monitoring
