@@ -29,10 +29,10 @@ for label in $Disks ; do
 	echo -n "$label Used: " >> $IFile && smartctl -A /dev/$label  | grep "Used:" | awk '{print $3}' | sed 's/%//' >> $IFile
 	Unit_Read=$(smartctl -A /dev/$label  | grep "Units Read:" | awk '{print $4}'  | sed 's/ //g' | sed 's/,//g')
 	Sum_Unit_Read=$(echo "$Unit_Read * $Value_In_Bytes / $Bytes_Per_TB"| bc)
-	echo -n "$label DataUnitsRead: $Sum_Unit_Read" >> $IFile
+	echo "$label DataUnitsRead: $Sum_Unit_Read" >> $IFile
 	Unit_Write=$(smartctl -A /dev/$label  | grep "Units Written:"  | awk '{print $4}'  | sed 's/ //g' | sed 's/,//g')
 	Sum_Unit_Write=$(echo "$Unit_Write * $Value_In_Bytes / $Bytes_Per_TB"| bc)
-	echo -n "$label DataUnitsWritten: $Sum_Unit_Write" >> $IFile
+	echo "$label DataUnitsWritten: $Sum_Unit_Write" >> $IFile
 	echo -n "$label PowerOnHours: " >> $IFile && smartctl -A /dev/$label  | grep "On Hours:" | awk '{print $4}' | sed 's/ //g' | sed 's/,//g' >> $IFile
 done
 
