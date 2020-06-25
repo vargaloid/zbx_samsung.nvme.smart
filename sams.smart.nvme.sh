@@ -12,7 +12,7 @@ touch ${IFile} && chmod 664 ${IFile} && cp /dev/null ${IFile}
 touch ${DFile} && chmod 664 ${DFile}
 
 # Identify Samsung SSD NVMe
-Disks=$(lsblk --nodeps -oNAME,TRAN,MODEL | grep -E "nvme.*Samsung.*970"| awk '{print $1}')
+Disks=$(lsblk --nodeps -oNAME,TRAN,MODEL | grep -E "nvme"| awk '{print $1}')
 
 # Create items file
 for label in $Disks ; do
@@ -27,13 +27,13 @@ for label in $Disks ; do
 	fi
 	echo "$label AvailableSpare: $Spare" >> $IFile
 	echo -n "$label Used: " >> $IFile && smartctl -A /dev/$label  | grep "Used:" | awk '{print $3}' | sed 's/%//' >> $IFile
-	Unit_Read=$(smartctl -A /dev/$label  | grep "Units Read:" | awk '{print $4}'  | sed 's/ //g' | sed 's/,//g')
+	Unit_Read=$(smartctl -A /dev/$label | grep "Units Read:" | awk '{print $4}' | sed -e 's/[^0-9]//g')
 	Sum_Unit_Read=$(echo "$Unit_Read * $Value_In_Bytes / $Bytes_Per_TB"| bc)
 	echo "$label DataUnitsRead: $Sum_Unit_Read" >> $IFile
-	Unit_Write=$(smartctl -A /dev/$label  | grep "Units Written:"  | awk '{print $4}'  | sed 's/ //g' | sed 's/,//g')
+	Unit_Write=$(smartctl -A /dev/$label | grep "Units Written:"  | awk '{print $4}' | sed -e 's/[^0-9]//g')
 	Sum_Unit_Write=$(echo "$Unit_Write * $Value_In_Bytes / $Bytes_Per_TB"| bc)
 	echo "$label DataUnitsWritten: $Sum_Unit_Write" >> $IFile
-	echo -n "$label PowerOnHours: " >> $IFile && smartctl -A /dev/$label  | grep "On Hours:" | awk '{print $4}' | sed 's/ //g' | sed 's/,//g' >> $IFile
+	echo -n "$label PowerOnHours: " >> $IFile && smartctl -A /dev/$label  | grep "On Hours:" | awk '{print $4}' | sed -e 's/[^0-9]//g' >> $IFile
 done
 
 # Create discovery file
