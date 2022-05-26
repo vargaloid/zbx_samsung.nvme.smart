@@ -12,7 +12,12 @@ touch ${IFile} && chmod 664 ${IFile} && cp /dev/null ${IFile}
 touch ${DFile} && chmod 664 ${DFile}
 
 # Identify Samsung SSD NVMe
-Disks=$(lsblk --nodeps -oNAME,TRAN,MODEL | grep -E "nvme"| awk '{print $1}')
+Disks=$(lsblk --nodeps -oNAME,TRAN,MODEL | grep -E "nvme"| awk '{print substr($1, 1, length($1)-2)}')
+
+# Debug
+#echo "Disks: "
+#echo "$Disks"
+#echo "====="
 
 # Create items file
 for label in $Disks ; do
